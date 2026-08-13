@@ -2,28 +2,13 @@ import Image from "next/image";
 import ArticleCard from "@/components/blog/ArticleCard";
 import bgImage from "@/public/bgHero.jpg";
 
-const articles = [
-  {
-    id: 1,
-    title: "Premier article",
-    excerpt: "Ceci est le résumé du premier article.",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    id: 2,
-    title: "Deuxième article",
-    excerpt: "Ceci est le résumé du deuxième article.",
-    date: new Date().toLocaleDateString(),
-  },
-  {
-    id: 3,
-    title: "Troisième article",
-    excerpt: "Ceci est le résumé du troisième article.",
-    date: new Date().toLocaleDateString(),
-  },
-];
+// Créer une migration, générer le client prisma et 
+// l'importer dans le fichier page.tsx pour récupérer les articles depuis la base de données.
+import {prisma} from "@/lib/prisma";
 
-export default function Home() {
+
+export default async function Home() {
+  const articles = await prisma.article.findMany();
   return (
     <main className="min-h-screen flex flex-col items-center gap-4">
       <div className="relative h-64 w-full mb-6 flex items-center justify-center">
@@ -43,6 +28,9 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center justify-center px-6">
         <h2 className="text-2xl font-bold mb-4">Articles récents</h2>
+        {/* <pre>
+          {JSON.stringify(articles, null, 2)}
+        </pre> */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {articles.map((article) => (
             <ArticleCard
