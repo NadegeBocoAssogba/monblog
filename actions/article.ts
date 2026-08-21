@@ -1,20 +1,87 @@
 "use server";
 
 import {prisma} from "@/lib/prisma";
+import {articleSchema} from "@/lib/validations";
+import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
 
-export async function createArticle(formData: FormData) {
-    const title = formData.get("title") as string;
-    const slug = formData.get("slug") as string;
-    const excerpt = formData.get("excerpt") as string;
-    const content = formData.get("content") as string;
-    await prisma.article.createMany({
-        data: [
-            {
+export async function createArticle(prevState: unknown, formData: FormData) {
+    const validateFields = articleSchema.safeParse({
+        title: formData.get("title"),
+        slug: formData.get("slug"),
+        excerpt: formData.get("excerpt"),
+        content: formData.get("content"),
+    });
+
+    if (!validateFields.success) {
+        return {
+            errors: validateFields.error.flatten().fieldErrors,
+        };
+    }
+
+    const { title, slug, excerpt, content } = validateFields.data;
+
+    try {
+        await prisma.article.create({
+            data:{
                 title: title,
                 slug: slug,
                 excerpt: excerpt,
                 content: content,
             },
-        ],
+        });
+        
+    } catch (error) {
+        console.error("Erreur lors de la création de l'article:", error);
+        return {
+            message: "Une erreur est survenue lors de la création de l'article. Veuillez réessayer.",
+        }
+    }
+    revalidatePath("/articles");
+    redirect("/articles");
+
+}
+
+export default async function updateArticle(
+    id: number,
+    prevState: unknown,
+    formData: FormData
+){
+    const validatedFields = articleSchema.safeParse({
+        title: formData.get("title"),
+        slug: formData.get("slug"),
+        excerpt: formData.get("excerpt"),
+        content: formData.get("content"),
     });
+
+    if (!validatedFields.success) {
+        return {
+        errors: validatedFields.error.flatten().fieldErrors,
+        };
+    }
+    const { title, slug, excerpt, content } = validatedFields.data;
+    try {
+        await prisma.article.update({
+            where: {
+                id,
+            },
+            data: {
+                title,
+                slug,
+                excerpt,
+                content,
+            },
+        });
+    } catch (error) {
+        console.error("Erreur lors de la modification :", error);
+
+        return {
+        message: "Impossible de modifier l'article.",
+        };
+    }
+
+    revalidatePath("/articles");
+    redirect("/articles");
+
+
 }
