@@ -11,6 +11,7 @@ export async function createArticle(prevState: unknown, formData: FormData) {
         slug: formData.get("slug"),
         excerpt: formData.get("excerpt"),
         content: formData.get("content"),
+        published: formData.get("published") === "on",
     });
 
     if (!validateFields.success) {
@@ -19,7 +20,7 @@ export async function createArticle(prevState: unknown, formData: FormData) {
         };
     }
 
-    const { title, slug, excerpt, content } = validateFields.data;
+    const { title, slug, excerpt, content, published } = validateFields.data;
 
     try {
         await prisma.article.create({
@@ -28,6 +29,7 @@ export async function createArticle(prevState: unknown, formData: FormData) {
                 slug: slug,
                 excerpt: excerpt,
                 content: content,
+                published: published,
             },
         });
         
@@ -52,6 +54,7 @@ export default async function updateArticle(
         slug: formData.get("slug"),
         excerpt: formData.get("excerpt"),
         content: formData.get("content"),
+        published: formData.get("published") === "on",
     });
 
     if (!validatedFields.success) {
@@ -59,7 +62,7 @@ export default async function updateArticle(
         errors: validatedFields.error.flatten().fieldErrors,
         };
     }
-    const { title, slug, excerpt, content } = validatedFields.data;
+    const { title, slug, excerpt, content, published } = validatedFields.data;
     try {
         await prisma.article.update({
             where: {
@@ -70,6 +73,7 @@ export default async function updateArticle(
                 slug,
                 excerpt,
                 content,
+                published,
             },
         });
     } catch (error) {

@@ -53,6 +53,20 @@ export default function ArticleForm(){
                 {state.message}
                 </p>
             )}
+
+            <div className="flex items-center gap-2">
+                <input
+                    id="published"
+                    name="published"
+                    type="checkbox"
+                    className="h-4 w-4"
+                />
+
+                <label htmlFor="published">
+                    Publier cet article
+                </label>
+            </div>
+
             <button
                 type="submit"
                 disabled={isPending}

@@ -1,4 +1,10 @@
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+
+import {Button} from "@/components/ui/button";
+import {Card, CardContent} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+
 import DeleteArticleButton from "@/components/blog/DeleteArticleButton";
 
 export default async function ArticlesPage() {
@@ -21,12 +27,11 @@ export default async function ArticlesPage() {
           </p>
         </div>
 
-        <a
-          href="/articles/new"
-          className="rounded-md bg-blue-500 px-4 py-2 text-white"
-        >
-          Nouvel article
-        </a>
+        <Button asChild>
+          <Link href="/articles/new">
+            Nouvel article
+          </Link>
+        </Button>
       </div>
 
       <div className="space-y-4">
@@ -46,24 +51,24 @@ export default async function ArticlesPage() {
                 </p>
               </div>
 
-              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm">
+              <Badge
+                variant={
+                  article.published 
+                    ? "default" : "secondary"}
+              > 
                 {article.published
                   ? "Publié"
-                  : "Brouillon"}
-              </span>
+                  : "Brouillon"
+                }
+              </Badge>
             </div>
 
-            <div className="mt-4 text-sm text-gray-500">
-              /{article.slug}
-            </div>
-
-            <div className="mt-4 flex gap-2">
-              <a
-                href={`/articles/${article.id}/edit`}
-                className="rounded-md border px-3 py-1 text-sm"
-              >
-                Modifier
-              </a>
+            <div className="mt-5 flex gap-2">
+              <Button asChild variant="outline">
+                <Link href={`/articles/${article.id}/edit`}>
+                  Modifier
+                </Link>
+              </Button>
               <DeleteArticleButton id={article.id} />
             </div>
           </article>
