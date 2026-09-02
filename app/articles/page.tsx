@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import DeleteArticleButton from "@/components/blog/DeleteArticleButton";
 
 export default async function ArticlesPage() {
   const articles = await prisma.article.findMany({
@@ -54,6 +55,16 @@ export default async function ArticlesPage() {
 
             <div className="mt-4 text-sm text-gray-500">
               /{article.slug}
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <a
+                href={`/articles/${article.id}/edit`}
+                className="rounded-md border px-3 py-1 text-sm"
+              >
+                Modifier
+              </a>
+              <DeleteArticleButton id={article.id} />
             </div>
           </article>
         ))}

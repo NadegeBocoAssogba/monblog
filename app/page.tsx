@@ -17,6 +17,7 @@ export default async function Home() {
           alt="Background image"
           fill
           className="object-cover"
+          loading="eager"
         />
          <div className="absolute inset-0 bg-black/55 z-10" />
         <div className="relative z-20 inset-0 flex flex-col items-center justify-center">
@@ -28,16 +29,18 @@ export default async function Home() {
       </div>
       <div className="flex flex-col items-center justify-center px-6">
         <h2 className="text-2xl font-bold mb-4">Articles récents</h2>
-        {/* <pre>
-          {JSON.stringify(articles, null, 2)}
-        </pre> */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {articles.map((article) => (
             <ArticleCard
               key={article.id}
               title={article.title}
               excerpt={article.excerpt}
-              date={article.date}
+              date={article.createdAt.toLocaleDateString("fr-FR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+              slug={article.slug}
             />
           ))}
         </div>

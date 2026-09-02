@@ -82,6 +82,23 @@ export default async function updateArticle(
 
     revalidatePath("/articles");
     redirect("/articles");
+}
 
+export async function deleteArticle(id: number) {
+    try {
+        await prisma.article.delete({
+            where: {
+                id,
+            },
+        });
+    } catch (error) {
+        console.error("Erreur lors de la suppression :", error);
 
+        return {
+            message: "Impossible de supprimer l'article.",
+        };
+    }
+
+    revalidatePath("/articles");
+    redirect("/articles");
 }

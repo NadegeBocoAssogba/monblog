@@ -2,6 +2,7 @@ type ArticleCardProps = {
   title: string;
   excerpt: string;
   date: string;
+  slug: string;
 };
 
 export default function ArticleCard({ title, excerpt, date }: ArticleCardProps) {
