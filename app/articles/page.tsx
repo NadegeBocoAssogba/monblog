@@ -27,7 +27,7 @@ export default async function ArticlesPage() {
           </p>
         </div>
 
-        <Button asChild>
+        <Button>
           <Link href="/articles/new">
             Nouvel article
           </Link>
@@ -64,7 +64,7 @@ export default async function ArticlesPage() {
             </div>
 
             <div className="mt-5 flex gap-2">
-              <Button asChild variant="outline">
+              <Button variant="outline">
                 <Link href={`/articles/${article.id}/edit`}>
                   Modifier
                 </Link>

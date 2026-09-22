@@ -1,8 +1,8 @@
 "use server";
 
 import {prisma} from "@/lib/prisma";
-import {articleSchema} from "@/lib/validations";
-import {redirect} from "next/navigation";
+import {articleSchema} from "@/lib/validations/article";
+import { redirect } from "next/navigation";
 import {revalidatePath} from "next/cache";
 
 export async function createArticle(prevState: unknown, formData: FormData) {
