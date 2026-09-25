@@ -12,6 +12,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Article {
   id        Int      @id @default(autoincrement()) //J'utilise autoincrement d'abord pour l'id,
   //  mais je peux aussi utiliser uuid() pour générer un id unique
@@ -20,6 +25,17 @@ model Article {
   content   String
   slug      String   @unique
   published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Modèle utilisé pour les utilisateurs
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  role      Role     @default(USER)
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
