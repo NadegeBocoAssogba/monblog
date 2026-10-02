@@ -19,6 +19,7 @@ export default function LoginForm() {
         });
         if (result?.error) {
             setError("Email ou mot de passe incorrect.");
+            return;
         }
         window.location.href = '/admin';
     }
