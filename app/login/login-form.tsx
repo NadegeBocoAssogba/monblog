@@ -21,7 +21,7 @@ export default function LoginForm() {
             setError("Email ou mot de passe incorrect.");
             return;
         }
-        window.location.href = '/admin';
+        // window.location.href = '/admin';
     }
     return (
         <form onSubmit={handleSubmit}>

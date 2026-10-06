@@ -1,15 +1,15 @@
 'use client';
  
-import { lusitana } from '@/app/ui/fonts';
+// import { lusitana } from '@/app/ui/fonts';
 import {
-  AtSymbolIcon,
+  AtSignIcon,
   KeyIcon,
-  ExclamationCircleIcon,
-} from '';
-import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Button } from '@/app/ui/button';
+  CircleAlertIcon,
+  ArrowRightIcon,
+} from 'lucide-react';
+import { Button } from './button';
 import { useActionState } from 'react';
-import { authenticate } from '@/app/lib/actions';
+import { authenticate } from '@/lib/actions';
 import { useSearchParams } from 'next/navigation';
  
 export default function LoginForm() {
@@ -23,7 +23,8 @@ export default function LoginForm() {
   return (
     <form action={formAction} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        <h1 className={`${lusitana.className} mb-3 text-2xl`}>
+        {/* <h1 className={`${lusitana.className} mb-3 text-2xl`}> */}
+        <h1 className={`mb-3 text-2xl`}>
           Please log in to continue.
         </h1>
         <div className="w-full">
@@ -43,7 +44,7 @@ export default function LoginForm() {
                 placeholder="Enter your email address"
                 required
               />
-              <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <AtSignIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
           <div className="mt-4">
@@ -78,7 +79,7 @@ export default function LoginForm() {
         >
           {errorMessage && (
             <>
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+              <CircleAlertIcon className="h-5 w-5 text-red-500" />
               <p className="text-sm text-red-500">{errorMessage}</p>
             </>
           )}

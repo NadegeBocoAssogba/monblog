@@ -9,6 +9,8 @@ export default defineConfig({
     tsconfigPaths: true, 
   },
   test: {
-    environment: 'jsdom', // Indispensable pour simuler le navigateur avec Next.js
+    setupFiles: './vitest.setup.ts', // Fichier de configuration pour Vitest
+    // environment: 'jsdom', // Indispensable pour simuler le navigateur avec Next.js
   },
+  // plugins: [tsconfigPaths()],
 })

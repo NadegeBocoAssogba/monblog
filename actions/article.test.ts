@@ -72,5 +72,6 @@ describe("createArticle", () => {
     });
     expect(redirectMock).toHaveBeenCalledWith("/articles");
     expect(revalidatePathMock).toHaveBeenCalledWith("/articles");
+    expect(result).toBeUndefined();
   });
 });
