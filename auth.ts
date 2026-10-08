@@ -4,19 +4,21 @@ import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import {z} from "zod";
 import bcrypt from "bcrypt";
-import type { User } from "@/lib/definitions";
-import postgres from "postgres";
+import { prisma } from "@/lib/prisma";
 
-const sql = postgres(process.env.DATABASE_URL!, { ssl: "require" });
-async function getUser(email: string): Promise<User | undefined> {
-  try {
-    const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
-    return user[0];
-  } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
-  }
-}
+// import type { User } from "@/lib/definitions";
+// import postgres from "postgres";
+
+// const sql = postgres(process.env.DATABASE_URL!, { ssl: "require" });
+// async function getUser(email: string): Promise<User | undefined> {
+//   try {
+//     const user = await sql<User[]>`SELECT * FROM users WHERE email=${email}`;
+//     return user[0];
+//   } catch (error) {
+//     console.error('Failed to fetch user:', error);
+//     throw new Error('Failed to fetch user.');
+//   }
+// }
 
 
 export const { auth, signIn, signOut } = NextAuth({
@@ -36,10 +38,29 @@ export const { auth, signIn, signOut } = NextAuth({
 
           if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
+          const user = await prisma.user.findUnique({
+            where: {
+              email,
+            },
+          });
+          if (!user){
+            console.log("Utilisateur introuvable");
+            return null;
+          }
           const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          if (!passwordsMatch){
+            console.log("Mot de passe incorrect");
+            return null;
+          }
+
+          const userForAuth = {
+            ...user,
+            id: String(user.id),
+          };
+
+          console.log("Connexion réussie :", user.email);
+          return userForAuth;
+
         }
         console.log("Identifiants incorrects")
         return null;

@@ -9,23 +9,24 @@ import {
 } from 'lucide-react';
 import { Button } from './button';
 import { useActionState } from 'react';
-import { authenticate } from '@/lib/actions';
+import { authenticate } from '@/actions/auth';
 import { useSearchParams } from 'next/navigation';
- 
+
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || '/admin';
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined,
   );
+  console.log("LoginForm rendu");
  
   return (
     <form action={formAction} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         {/* <h1 className={`${lusitana.className} mb-3 text-2xl`}> */}
         <h1 className={`mb-3 text-2xl`}>
-          Please log in to continue.
+          Veuillez vous connecter pour continuer.
         </h1>
         <div className="w-full">
           <div>
@@ -52,7 +53,7 @@ export default function LoginForm() {
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
-              Password
+              Mot de passe
             </label>
             <div className="relative">
               <input
@@ -69,9 +70,12 @@ export default function LoginForm() {
           </div>
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        <Button className="mt-4 w-full" aria-disabled={isPending}>
-          Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-        </Button>
+        {/* <Button className="mt-4 w-full" aria-disabled={isPending}>
+          Se connecter <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+        </Button> */}
+         <button type="submit">
+        Se connecter
+      </button>
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
