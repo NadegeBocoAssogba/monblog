@@ -5,9 +5,9 @@ import {
   AtSignIcon,
   KeyIcon,
   CircleAlertIcon,
-  ArrowRightIcon,
+  // ArrowRightIcon,
 } from 'lucide-react';
-import { Button } from './button';
+// import { Button } from './button';
 import { useActionState } from 'react';
 import { authenticate } from '@/actions/auth';
 import { useSearchParams } from 'next/navigation';
@@ -19,7 +19,7 @@ export default function LoginForm() {
     authenticate,
     undefined,
   );
-  console.log("LoginForm rendu");
+  // console.log("LoginForm rendu");
  
   return (
     <form action={formAction} className="space-y-3">
