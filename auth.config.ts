@@ -13,7 +13,7 @@ export const authConfig = {
       }
       return token;
     },
-    
+
     async session({ session, token }) {
       //Si l’objet utilisateur existe dans la session
       if (session.user) {
@@ -30,12 +30,20 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isAdminPage = nextUrl.pathname.startsWith("/admin");
+      const isLoginPage = nextUrl.pathname === "/login";
 
       if (isAdminPage) {
-        if (isLoggedIn) return true;
-        return false;
-      } else if (isLoggedIn){
-        return Response.redirect(new URL("/admin", nextUrl))
+        if (!isLoggedIn) return false;
+
+        if (auth.user.role !== "ADMIN") {
+          return Response.redirect(new URL("/", nextUrl));
+        }
+
+        return true;
+      }
+
+      if (isLoginPage && auth?.user?.role === "ADMIN") {
+        return Response.redirect(new URL("/admin", nextUrl));
       }
 
       return true;
