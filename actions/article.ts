@@ -4,8 +4,18 @@ import {prisma} from "@/lib/prisma";
 import {articleSchema} from "@/lib/validations/article";
 import { redirect } from "next/navigation";
 import {revalidatePath} from "next/cache";
+import { requireAdmin } from "@/lib/auth-helpers"
 
 export async function createArticle(prevState: unknown, formData: FormData) {
+    try{
+        await requireAdmin();
+    } catch (error){
+        return{
+            message: error instanceof Error
+                ? error.message
+                : "Accès refusé.",
+        }
+    }
     const validateFields = articleSchema.safeParse({
         title: formData.get("title"),
         slug: formData.get("slug"),

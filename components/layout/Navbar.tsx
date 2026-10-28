@@ -1,3 +1,4 @@
+import { logout } from "@/actions/auth";
 import Link from "next/link";
 
 export default function Navbar() {
@@ -10,10 +11,17 @@ export default function Navbar() {
                     <Link href="/about">À propos</Link>
                     <Link href="/articles">Articles</Link>
                 </div>
-                <div>
-                    <Link href="/articles/new" className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-                        Créer un article
+                <div className="flex gap-4">
+                    <Link href="/login" className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+                        Se connecter
                     </Link>
+                   
+                    <form action={logout}>
+                        <button type="submit" className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
+                            Se déconnecter
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </nav>
