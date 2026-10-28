@@ -25,7 +25,7 @@ export default function LoginForm() {
     }
     return (
         <form onSubmit={handleSubmit}>
-            <div>
+            <div className="">
                 <label htmlFor="email">Email</label>
                 <input
                     id="email"

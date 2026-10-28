@@ -20,13 +20,16 @@
 // }
 
 import LoginForm from "@/components/ui/login-form";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
-    <main>
-      <h1>Connexion</h1>
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
+      <h1 className="text-xl">Connexion</h1>
 
       <LoginForm />
+
+      <p>Pas encore un compte ? <span className="text-blue-500 hover:underline"><Link href="/register">Inscrivez-vous</Link></span>.</p>
     </main>
   );
 }

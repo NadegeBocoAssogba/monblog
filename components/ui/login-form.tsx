@@ -19,13 +19,11 @@ export default function LoginForm() {
     authenticate,
     undefined,
   );
-  // console.log("LoginForm rendu");
  
   return (
     <form action={formAction} className="space-y-3">
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-        {/* <h1 className={`${lusitana.className} mb-3 text-2xl`}> */}
-        <h1 className={`mb-3 text-2xl`}>
+      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8 mt-2 flex flex-col justify-center items-center">
+        <h1 className= "mb-3 text-xl">
           Veuillez vous connecter pour continuer.
         </h1>
         <div className="w-full">
@@ -38,14 +36,14 @@ export default function LoginForm() {
             </label>
             <div className="relative">
               <input
-                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full rounded-md border border-gray-200 py-2.25 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="email"
                 type="email"
                 name="email"
                 placeholder="Enter your email address"
                 required
               />
-              <AtSignIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <AtSignIcon className="pointer-events-none absolute left-3 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
           <div className="mt-4">
@@ -57,7 +55,7 @@ export default function LoginForm() {
             </label>
             <div className="relative">
               <input
-                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block w-full rounded-md border border-gray-200 py-2.25 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id="password"
                 type="password"
                 name="password"
@@ -65,15 +63,12 @@ export default function LoginForm() {
                 required
                 minLength={6}
               />
-              <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
         <input type="hidden" name="redirectTo" value={callbackUrl} />
-        {/* <Button className="mt-4 w-full" aria-disabled={isPending}>
-          Se connecter <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-        </Button> */}
-         <button type="submit">
+         <button type="submit" className="mt-4 w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600" aria-disabled={isPending}>
         Se connecter
       </button>
         <div
