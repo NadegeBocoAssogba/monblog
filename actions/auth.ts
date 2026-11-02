@@ -28,8 +28,8 @@ export async function authenticate(
   }
 }
 
-async function registerUser(
-  prevState: String | undefined,
+export async function registerUser(
+  prevState: string | undefined,
   formData: FormData
 ) {
   // Validation des données saisies
@@ -59,6 +59,24 @@ async function registerUser(
     return "Cette adresse email est déjà utilisée.";
   }
 
+  // Si l'utilisateur n'existe pas, créer un nouvel utilisateur dans la base de données
+  // Commencer par hasher le mot de passe avant de l'enregistrer dans la base de données
   const hashedPassword = await bcrypt.hash(password, 10);
+  // Créer l'utilisateur dans la base de données
+  try {
+    await prisma.user.create({
+      data:{
+        name,
+        email,
+        password: hashedPassword,
+        // role: "USER",
+      }
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'inscription, :", error);
+    return "Une erreur est survenue lors de l'inscription. Veuillez réessayer.";
+  }
+  // Rediriger l'utilisateur vers la page de connexion après l'inscription
+  redirect("/login");
 
 }

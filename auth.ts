@@ -5,8 +5,6 @@ import Credentials from "next-auth/providers/credentials";
 import {z} from "zod";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
-import { registerSchema } from "./lib/validations/user";
-import { redirect } from "next/navigation";
 
 
 export const { auth, signIn, signOut } = NextAuth({
