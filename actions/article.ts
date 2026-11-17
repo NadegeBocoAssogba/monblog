@@ -7,15 +7,7 @@ import {revalidatePath} from "next/cache";
 import { requireAdmin } from "@/lib/auth-helpers"
 
 export async function createArticle(prevState: unknown, formData: FormData) {
-    try{
-        await requireAdmin();
-    } catch (error){
-        return{
-            message: error instanceof Error
-                ? error.message
-                : "Accès refusé.",
-        }
-    }
+    await requireAdmin();
     const validateFields = articleSchema.safeParse({
         title: formData.get("title"),
         slug: formData.get("slug"),
@@ -54,11 +46,16 @@ export async function createArticle(prevState: unknown, formData: FormData) {
 
 }
 
+
 export default async function updateArticle(
     id: number,
     prevState: unknown,
     formData: FormData
-){
+) {
+    // Vérifier les droits de l'utilisateur
+    await requireAdmin();
+
+    // Valider les données du formulaire
     const validatedFields = articleSchema.safeParse({
         title: formData.get("title"),
         slug: formData.get("slug"),
@@ -69,15 +66,17 @@ export default async function updateArticle(
 
     if (!validatedFields.success) {
         return {
-        errors: validatedFields.error.flatten().fieldErrors,
+            errors: validatedFields.error.flatten().fieldErrors,
         };
     }
+
+    // Récupérer les données validées
     const { title, slug, excerpt, content, published } = validatedFields.data;
+
+    // Modifier l'article dans la base de données
     try {
         await prisma.article.update({
-            where: {
-                id,
-            },
+            where: { id },
             data: {
                 title,
                 slug,
@@ -90,15 +89,19 @@ export default async function updateArticle(
         console.error("Erreur lors de la modification :", error);
 
         return {
-        message: "Impossible de modifier l'article.",
+            message: "Impossible de modifier l'article.",
         };
     }
 
+    // Actualiser la liste et rediriger
     revalidatePath("/articles");
     redirect("/articles");
 }
 
 export async function deleteArticle(id: number) {
+    // Vérifier les droits de l'utilisateur
+    await requireAdmin();
+
     try {
         await prisma.article.delete({
             where: {

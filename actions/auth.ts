@@ -80,3 +80,8 @@ export async function registerUser(
   redirect("/login");
 
 }
+
+// Fonction pour se déconnecter
+export async function logout() {
+  await signOut({ redirectTo: "/login" });
+}
