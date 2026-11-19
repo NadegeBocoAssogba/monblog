@@ -1,6 +1,7 @@
 import {prisma} from "@/lib/prisma";
 import {notFound} from "next/navigation"
 import EditArticleForm from "@/components/blog/EditArticleForm";
+import { requireAdmin } from "@/lib/auth-helpers";
 
 type EditArticlePageProps = {
     params: Promise<{
@@ -11,6 +12,7 @@ type EditArticlePageProps = {
 export default async function EditArticlePage({
     params,
 }:EditArticlePageProps){
+    await requireAdmin();
     const {id} = await params;
     const articleId = Number(id);
     if (Number.isNaN(articleId)){

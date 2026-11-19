@@ -1,13 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { auth } from "@/auth";
 
 import {Button} from "@/components/ui/button";
-import {Card, CardContent} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 import DeleteArticleButton from "@/components/blog/DeleteArticleButton";
 
 export default async function ArticlesPage() {
+  const session = await auth();
+  const isAdmin = session?.user?.role === "ADMIN";
+
   const articles = await prisma.article.findMany({
     orderBy: {
       createdAt: "desc",
@@ -27,11 +30,13 @@ export default async function ArticlesPage() {
           </p>
         </div>
 
-        <Button>
-          <Link href="/articles/new">
-            Nouvel article
-          </Link>
-        </Button>
+        {isAdmin && (
+          <Button>
+            <Link href="/articles/new">
+              Nouvel article
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -63,14 +68,17 @@ export default async function ArticlesPage() {
               </Badge>
             </div>
 
-            <div className="mt-5 flex gap-2">
-              <Button variant="outline">
-                <Link href={`/articles/${article.id}/edit`}>
-                  Modifier
-                </Link>
-              </Button>
-              <DeleteArticleButton id={article.id} />
-            </div>
+            {isAdmin && (
+              <div className="mt-5 flex gap-2">
+                <Button variant="outline">
+                  <Link href={`/articles/${article.id}/edit`}>
+                    Modifier
+                  </Link>
+                </Button>
+
+                <DeleteArticleButton id={article.id} />
+              </div>
+            )}
           </article>
         ))}
       </div>
