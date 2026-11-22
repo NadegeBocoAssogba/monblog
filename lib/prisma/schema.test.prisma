@@ -14,6 +14,9 @@ model Article {
   excerpt   String
   content   String
   published Boolean  @default(false)
+
+  authorId Int
+  
 }
 
 model User {

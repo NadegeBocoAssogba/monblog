@@ -9,7 +9,7 @@ import DeleteArticleButton from "@/components/blog/DeleteArticleButton";
 
 export default async function ArticlesPage() {
   const session = await auth();
-  const isAdmin = session?.user?.role === "ADMIN";
+  const isAuthenticated = !!session?.user;
 
   const articles = await prisma.article.findMany({
     orderBy: {
@@ -30,7 +30,7 @@ export default async function ArticlesPage() {
           </p>
         </div>
 
-        {isAdmin && (
+        {isAuthenticated && (
           <Button>
             <Link href="/articles/new">
               Nouvel article
@@ -68,7 +68,7 @@ export default async function ArticlesPage() {
               </Badge>
             </div>
 
-            {isAdmin && (
+            {isAuthenticated && (
               <div className="mt-5 flex gap-2">
                 <Button variant="outline">
                   <Link href={`/articles/${article.id}/edit`}>

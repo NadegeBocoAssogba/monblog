@@ -4,10 +4,10 @@ import {prisma} from "@/lib/prisma";
 import {articleSchema} from "@/lib/validations/article";
 import { redirect } from "next/navigation";
 import {revalidatePath} from "next/cache";
-import { requireAdmin } from "@/lib/auth-helpers"
+import { requireAuth } from "@/lib/auth-helpers"
 
 export async function createArticle(prevState: unknown, formData: FormData) {
-    await requireAdmin();
+    await requireAuth();
     const validateFields = articleSchema.safeParse({
         title: formData.get("title"),
         slug: formData.get("slug"),
@@ -53,7 +53,7 @@ export default async function updateArticle(
     formData: FormData
 ) {
     // Vérifier les droits de l'utilisateur
-    await requireAdmin();
+    await requireAuth();
 
     // Valider les données du formulaire
     const validatedFields = articleSchema.safeParse({
@@ -100,7 +100,7 @@ export default async function updateArticle(
 
 export async function deleteArticle(id: number) {
     // Vérifier les droits de l'utilisateur
-    await requireAdmin();
+    await requireAuth();
 
     try {
         await prisma.article.delete({
