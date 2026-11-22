@@ -16,12 +16,21 @@ model Article {
   published Boolean  @default(false)
 
   authorId Int
-  
+  author User @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
   id    Int    @id @default(autoincrement())
   email String @unique
-  name  String
+  name  String?
   password String
+  role      Role     @default(USER)
+
+  articles  Article[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
