@@ -5,15 +5,18 @@ import {articleSchema} from "@/lib/validations/article";
 import { redirect } from "next/navigation";
 import {revalidatePath} from "next/cache";
 import { requireAuth } from "@/lib/auth-helpers"
+// import { auth } from "@/auth";
 
 export async function createArticle(prevState: unknown, formData: FormData) {
-    await requireAuth();
+    const user = await requireAuth();
+
     const validateFields = articleSchema.safeParse({
         title: formData.get("title"),
         slug: formData.get("slug"),
         excerpt: formData.get("excerpt"),
         content: formData.get("content"),
         published: formData.get("published") === "on",
+        authorId: user.id,
     });
 
     if (!validateFields.success) {
@@ -32,6 +35,7 @@ export async function createArticle(prevState: unknown, formData: FormData) {
                 excerpt: excerpt,
                 content: content,
                 published: published,
+                authorId: Number(user.id),
             },
         });
         
@@ -52,8 +56,29 @@ export default async function updateArticle(
     prevState: unknown,
     formData: FormData
 ) {
-    // Vérifier les droits de l'utilisateur
-    await requireAuth();
+    // Vérifier que l'utilisateur est authentifié et récupérer ses informations
+    const user = await requireAuth();
+    
+    // Récupérer l'article à modifier
+    const article = await prisma.article.findUnique({
+        where: {
+            id,
+        },
+    });
+
+    // Vérifier que l'article existe
+    if (!article) {
+        return {
+            message: "Article non trouvé ou accès refusé.",
+        };
+    }
+
+    // Vérifier que l'utilisateur est l'auteur de l'article ou un administrateur
+    if (article.authorId !== Number(user.id) && user.role !== "ADMIN") {
+        return {
+            message: "Vous n'avez pas la permission de modifier cet article.",
+        };
+    }
 
     // Valider les données du formulaire
     const validatedFields = articleSchema.safeParse({
@@ -72,6 +97,7 @@ export default async function updateArticle(
 
     // Récupérer les données validées
     const { title, slug, excerpt, content, published } = validatedFields.data;
+
 
     // Modifier l'article dans la base de données
     try {
@@ -99,18 +125,38 @@ export default async function updateArticle(
 }
 
 export async function deleteArticle(id: number) {
-    // Vérifier les droits de l'utilisateur
-    await requireAuth();
+    // Récupérer l'utilisateur connecté
+    const user = await requireAuth();
 
+    // Récupérer l'article à supprimer
+    const article = await prisma.article.findUnique({
+        where: {
+            id,
+        },
+    });
+
+    // Vérifier que l'article existe
+    if (!article) {
+        return {
+            message: "Article non trouvé ou accès refusé.",
+        };
+    }
+
+    // Vérifier que l'utilisateur est l'auteur de l'article ou un administrateur
+    if (article.authorId !== Number(user.id) && user.role !== "ADMIN") {
+        return {
+            message: "Vous n'avez pas la permission de supprimer cet article.",
+        };
+    }
+
+    // Supprimer l'article de la base de données
     try {
         await prisma.article.delete({
-            where: {
-                id,
-            },
+            where: { id },
         });
     } catch (error) {
         console.error("Erreur lors de la suppression :", error);
-
+        
         return {
             message: "Impossible de supprimer l'article.",
         };
